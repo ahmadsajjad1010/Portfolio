@@ -37,7 +37,7 @@ npm-debug.log*
 # VSCode
 .vscode/
 
-# Heavy files
-public/assets/*.mp4
-public/assets/*.pdf
-public/assets/*.webp
+# # Heavy files
+# public/assets/*.mp4
+# public/assets/*.pdf
+# public/assets/*.webp

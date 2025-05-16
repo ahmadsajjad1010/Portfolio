@@ -9,11 +9,11 @@ function Page3() {
           loop
           muted
           className="z-10 w-[50vw] border-none "
-          src="./assets/computervideo.mp4"
+          src="/assets/computervideo.mp4"
         ></video>
         <img
           className="w-[63vw] absolute  h-[31vw] z-20"
-          src="./assets/laptop.webp"
+          src="/assets/laptop.webp"
           alt=""
         />
 
