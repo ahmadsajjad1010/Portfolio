@@ -1,0 +1,8 @@
+/* media query section  */
+@media (max-width: 768px) {
+  
+
+    .dot{
+ opacity: 0;
+    }
+  }
