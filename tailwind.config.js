@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        anton: ['Anton', 'sans-serif'],
+      },
+          zIndex: {
+      '999999': '999999',
+    },
+    },
   },
   plugins: [],
 }
