@@ -85,6 +85,9 @@ const Page5 = () => {
 
     const ctx = gsap.context(() => {
       gsap.utils.toArray(".skill-item").forEach((item, i) => {
+        const levelBar = item.querySelector(".skill-level-bar");
+        const circleProgress = item.querySelector(".progress-circle > circle:last-child");
+
         gsap.from(item, {
           scrollTrigger: {
             trigger: item,
@@ -98,30 +101,28 @@ const Page5 = () => {
           ease: "power3.out",
         });
 
-        const levelBar = item.querySelector(".skill-level-bar");
-        const circleProgress = item.querySelector(".progress-circle > circle:last-child");
-
         item.addEventListener("mouseenter", () => {
-          // Animate linear bar fill
+          const levelPercent = levelBar.dataset.level;
+
           gsap.to(levelBar, {
-            width: "100%",
+            width: `${levelPercent}%`,
             duration: 0.5,
             ease: "power2.out",
           });
-          // Animate circle progress stroke offset to zero
+
           gsap.to(circleProgress, {
             strokeDashoffset: 0,
             duration: 0.7,
             ease: "power2.out",
           });
-          // Scale and shadow for card
+
           gsap.to(item, {
             scale: 1.05,
             duration: 0.3,
             boxShadow: `0 0 20px ${levelBar.style.backgroundColor || "#D0F034"}`,
             ease: "power2.out",
           });
-          // Bounce icon
+
           gsap.fromTo(
             item.querySelector(".skill-icon"),
             { y: 0 },
@@ -130,16 +131,20 @@ const Page5 = () => {
         });
 
         item.addEventListener("mouseleave", () => {
+          const dasharray = circleProgress.getAttribute("stroke-dasharray");
+
           gsap.to(levelBar, {
             width: "0%",
             duration: 0.5,
             ease: "power2.out",
           });
+
           gsap.to(circleProgress, {
-            strokeDashoffset: parseFloat(circleProgress.getAttribute("stroke-dasharray")),
+            strokeDashoffset: parseFloat(dasharray),
             duration: 0.7,
             ease: "power2.out",
           });
+
           gsap.to(item, {
             scale: 1,
             boxShadow: "none",
@@ -152,7 +157,6 @@ const Page5 = () => {
     return () => ctx.revert();
   }, []);
 
-  // For circle progress bar, calculate stroke dash array and offset:
   const radius = 30;
   const circumference = 2 * Math.PI * radius;
 
@@ -160,9 +164,8 @@ const Page5 = () => {
     <div
       ref={containerRef}
       className="relative py-20 overflow-hidden"
-      style={{ background: "#0D0D0D", transform: "none", rotate: "0deg" }}
+      style={{ background: "#0D0D0D" }}
     >
-      {/* Fixed Background Rings without random rotation */}
       <div className="skills-bg absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(12)].map((_, i) => (
           <div
@@ -173,7 +176,7 @@ const Page5 = () => {
               height: `${100 + i * 100}px`,
               top: `${(i * 8) % 100}%`,
               left: `${(i * 11) % 100}%`,
-              transform: `rotate(${i * 15}deg)`, // consistent rotation
+              transform: `rotate(${i * 15}deg)`,
             }}
           />
         ))}
@@ -195,10 +198,7 @@ const Page5 = () => {
                 key={index}
                 className="skill-item relative p-6 rounded-xl bg-gradient-to-tr from-[#121212] to-[#1A1A1A] border border-[#2A2A2A] cursor-pointer shadow-md transition-all duration-400 hover:from-[#223300] hover:to-[#445500] hover:border-[#D0F034]/70"
                 style={{ minHeight: "200px" }}
-                aria-label={`${skill.name} skill at ${skill.level} percent proficiency`}
-                tabIndex={0}
               >
-                {/* Circular progress around icon */}
                 <svg
                   className="progress-circle absolute top-6 left-6 w-16 h-16"
                   width="64"
@@ -207,7 +207,6 @@ const Page5 = () => {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  {/* Background circle */}
                   <circle
                     cx="36"
                     cy="36"
@@ -216,7 +215,6 @@ const Page5 = () => {
                     strokeWidth="6"
                     opacity="0.3"
                   />
-                  {/* Progress circle */}
                   <circle
                     className="stroke-current"
                     cx="36"
@@ -231,11 +229,9 @@ const Page5 = () => {
                   />
                 </svg>
 
-                {/* Icon with bounce animation */}
                 <div
                   className="skill-icon text-5xl absolute top-6 left-6 flex items-center justify-center text-white"
                   style={{ marginLeft: "24px", marginTop: "8px" }}
-                  aria-hidden="true"
                 >
                   {skill.icon}
                 </div>
@@ -273,7 +269,6 @@ const Page5 = () => {
                   }}
                 />
 
-                {/* Category tag */}
                 <div
                   className="absolute top-4 right-4 px-2 py-0.5 rounded-full text-xs font-semibold"
                   style={{
@@ -290,7 +285,6 @@ const Page5 = () => {
           })}
         </div>
 
-        {/* Decorative glowing background circles */}
         <div className="absolute top-0 right-0 w-64 h-64 -mr-32 -mt-32 rounded-full bg-[#D0F034]/10 blur-xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 -ml-48 -mb-48 rounded-full bg-[#D0F034]/5 blur-xl pointer-events-none"></div>
       </div>
