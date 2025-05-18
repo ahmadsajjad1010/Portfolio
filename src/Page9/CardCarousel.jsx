@@ -1,104 +1,117 @@
-import { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
-const cards = [
+const reviews = [
   {
     id: 1,
-    name: "Ali Hamza",
-    logo: "./assets/CardCarousel3.jpg",
+    name: "Ali Raza",
+    logo: "https://i.pravatar.cc/100?img=1",
     review:
-      "I’m absolutely impressed with the quality and professionalism. The service exceeded my expectations and the team was super responsive. Highly recommend!",
-    createdAt: "2025-05-01",
+      "Excellent service! The team was responsive and professional. Highly recommended!",
+    date: "March 15, 2025",
   },
   {
     id: 2,
-    name: "Shariq Moeed",
-    logo: "./assets/CardCarousel1.jpg",
-    review:
-      "Fast, reliable, and exactly what I needed. The experience was seamless from start to finish. I will definitely be coming back.",
-    createdAt: "2025-05-03",
+    name: "Sara Khan",
+    logo: "https://i.pravatar.cc/100?img=2",
+    review: "Great experience from start to finish. Will definitely use again.",
+    date: "April 2, 2025",
   },
   {
     id: 3,
-    name: "Khubain Saleem",
-    logo: "./assets/CardCarousel2.jpg",
-    review:
-      "Great attention to detail and fantastic communication throughout the project. The final outcome was perfect and delivered on time.",
-    createdAt: "2025-05-05",
+    name: "Hamid Sheikh",
+    logo: "https://i.pravatar.cc/100?img=3",
+    review: "Very satisfied with the quality and support. Five stars!",
+    date: "April 18, 2025",
   },
   {
     id: 4,
-    name: "Sam",
-    logo: "./assets/CardCarousel4.jpg",
-    review:
-      "The best experience I’ve had in a long time. Very professional, friendly, and dedicated. Truly goes above and beyond",
-    createdAt: "2025-05-08",
+    name: "Zara Ahmed",
+    logo: "https://i.pravatar.cc/100?img=4",
+    review: "Professional, efficient, and reliable. Highly recommended!",
+    date: "May 5, 2025",
   },
   {
     id: 5,
-    name: "Ahmad Sajjad",
-    logo: "./assets/t.jpg",
+    name: "Omar Farooq",
+    logo: "https://i.pravatar.cc/100?img=5",
+    review: "Customer service was exceptional. I’m very happy with the results.",
+    date: "May 15, 2025",
+  },
+  {
+    id: 6,
+    name: "Ayesha Malik",
+    logo: "https://i.pravatar.cc/100?img=6",
     review:
-      "Quality work with a personal touch. The team listened carefully and delivered exactly what I wanted. I’m very happy with the result!",
-    createdAt: "2025-05-10",
+      "Top notch work and great communication throughout the process.",
+    date: "May 20, 2025",
+  },
+  {
+    id: 7,
+    name: "Faisal Iqbal",
+    logo: "https://i.pravatar.cc/100?img=7",
+    review: "Highly skilled team. Delivered exactly what I needed.",
+    date: "May 25, 2025",
+  },
+  {
+    id: 8,
+    name: "Nadia Javed",
+    logo: "https://i.pravatar.cc/100?img=8",
+    review: "Amazing quality and very friendly staff. Will come back again!",
+    date: "June 1, 2025",
+  },
+  {
+    id: 9,
+    name: "Bilal Hussain",
+    logo: "https://i.pravatar.cc/100?img=9",
+    review:
+      "The best experience I've had with any service provider. Highly recommend!",
+    date: "June 10, 2025",
   },
 ];
 
-const positions = {
-  center: { x: 0, rotateY: 0, scale: 1, filter: "blur(0)", opacity: 1, zIndex: 30 },
-  left1: { x: -140, rotateY: 25, scale: 0.85, filter: "blur(1.2px)", opacity: 0.75, zIndex: 20 },
-  left2: { x: -280, rotateY: 45, scale: 0.7, filter: "blur(2px)", opacity: 0.5, zIndex: 10 },
-  right1: { x: 140, rotateY: -25, scale: 0.85, filter: "blur(1.2px)", opacity: 0.75, zIndex: 20 },
-  right2: { x: 280, rotateY: -45, scale: 0.7, filter: "blur(2px)", opacity: 0.5, zIndex: 10 },
-};
-
-const colorStyles = {
-  center: {
-    background: "white",
-    color: "#034d03",
-    border: "2px solid #aaa",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-    cursor: "default",
-  },
-  left1: {
-    background: "#f7f7f7",
-    color: "#276627",
-    border: "1.5px solid #ccc",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-    cursor: "pointer",
-  },
-  left2: {
-    background: "#fafafa",
-    color: "#4a7d4a",
-    border: "1px solid #ddd",
-    boxShadow: "none",
-    cursor: "default",
-  },
-  right1: {
-    background: "#f7f7f7",
-    color: "#276627",
-    border: "1.5px solid #ccc",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-    cursor: "pointer",
-  },
-  right2: {
-    background: "#fafafa",
-    color: "#4a7d4a",
-    border: "1px solid #ddd",
-    boxShadow: "none",
-    cursor: "default",
-  },
-};
-
-const formatDate = (dateString) => {
-  const options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
-  return new Date(dateString).toLocaleDateString("en-US", options);
-};
-
-export default function CardCarousel() {
+const CardCarousel = () => {
+  const totalCards = reviews.length;
   const [activeIndex, setActiveIndex] = useState(0);
-  const totalCards = cards.length;
+  const [direction, setDirection] = useState("rtl");
+  const intervalRef = useRef(null);
 
+  useEffect(() => {
+    startAutoRotate();
+    return () => stopAutoRotate();
+  }, [direction]);
+
+  const startAutoRotate = () => {
+    stopAutoRotate();
+    intervalRef.current = setInterval(() => {
+      setActiveIndex((prev) =>
+        direction === "rtl"
+          ? (prev + 1) % totalCards
+          : (prev - 1 + totalCards) % totalCards
+      );
+    }, 3000);
+  };
+
+  const stopAutoRotate = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  };
+
+  const handlePrev = () => {
+    stopAutoRotate();
+    setDirection("ltr");
+    setActiveIndex((prevIndex) => (prevIndex - 1 + totalCards) % totalCards);
+    startAutoRotate();
+  };
+
+  const handleNext = () => {
+    stopAutoRotate();
+    setDirection("rtl");
+    setActiveIndex((prevIndex) => (prevIndex + 1) % totalCards);
+    startAutoRotate();
+  };
+
+  // Show 7 cards max (center + 3 left + 3 right)
   const getPosition = (index) => {
     let posIndex = (index - activeIndex + totalCards) % totalCards;
     switch (posIndex) {
@@ -108,138 +121,154 @@ export default function CardCarousel() {
         return "right1";
       case 2:
         return "right2";
+      case 3:
+        return "right3";
       case totalCards - 1:
         return "left1";
       case totalCards - 2:
         return "left2";
+      case totalCards - 3:
+        return "left3";
       default:
-        return "right2";
+        return null;
     }
   };
 
-  const rotateClockwise = () => setActiveIndex((prev) => (prev + 1) % totalCards);
-  const rotateAntiClockwise = () => setActiveIndex((prev) => (prev - 1 + totalCards) % totalCards);
+  const positions = {
+    center: { x: 0, rotateY: 0, scale: 1, zIndex: 50, filter: "none", opacity: 1 },
+    left1: { x: "-10vw", rotateY: 20, scale: 0.85, filter: "blur(0.5px)", opacity: 0.75, zIndex: 40 },
+    left2: { x: "-20vw", rotateY: 40, scale: 0.7, filter: "blur(2px)", opacity: 0.5, zIndex: 30 },
+    left3: { x: "-30vw", rotateY: 60, scale: 0.6, filter: "blur(3px)", opacity: 0.3, zIndex: 20 },
+    right1: { x: "10vw", rotateY: -20, scale: 0.85, filter: "blur(0.5px)", opacity: 0.75, zIndex: 40 },
+    right2: { x: "20vw", rotateY: -40, scale: 0.7, filter: "blur(2px)", opacity: 0.5, zIndex: 30 },
+    right3: { x: "30vw", rotateY: -60, scale: 0.6, filter: "blur(3px)", opacity: 0.3, zIndex: 20 },
+  };
 
-  const handleClick = (index) => {
-    const pos = getPosition(index);
-    if (pos === "left1") rotateAntiClockwise();
-    else if (pos === "right1") rotateClockwise();
+  const colorStyles = {
+    center: {
+      background: "#111827", // dark gray
+      color: "#f9fafb", // near white
+      border: "2px solid #374151", // slate border
+      boxShadow: "0 0 25px rgba(255, 255, 255, 0.15)",
+    },
+    left1: {
+      background: "#1f2937",
+      color: "#d1d5db",
+      border: "1px solid #4b5563",
+    },
+    left2: {
+      background: "#1f2937",
+      color: "#9ca3af",
+      border: "1px solid #6b7280",
+    },
+    left3: {
+      background: "#111827",
+      color: "#6b7280",
+      border: "1px solid #374151",
+    },
+    right1: {
+      background: "#1f2937",
+      color: "#d1d5db",
+      border: "1px solid #4b5563",
+    },
+    right2: {
+      background: "#1f2937",
+      color: "#9ca3af",
+      border: "1px solid #6b7280",
+    },
+    right3: {
+      background: "#111827",
+      color: "#6b7280",
+      border: "1px solid #374151",
+    },
   };
 
   return (
-    <div className="w-full relative px-4 py-6 bg-white">
-      <div className="w-full flex flex-col items-center justify-center px-4 py-10 bg-gray-100 rounded-xl shadow-xl max-w-6xl mx-auto relative overflow-hidden">
-        {/* Decorative Background */}
-        <div className="absolute -z-10 w-[500px] h-[500px] rounded-full bg-green-300 opacity-30 blur-3xl top-[25vh] left-1/2 transform -translate-x-1/2"></div>
-
-        {/* Heading */}
-        <div className="w-full flex flex-col items-center justify-center border-b border-gray-400 pb-6">
-          <div className="relative inline-block">
-            <h2 className="relative z-10 text-xl sm:text-2xl md:text-3xl font-bold text-white px-4 sm:px-6 py-2 select-none">
-              Testimonials
-            </h2>
-            <div className="absolute inset-0 z-0 bg-green-600 rounded-md skew-x-[-12deg]"></div>
-          </div>
-          <h2 className="text-lg sm:text-2xl md:text-3xl font-semibold mt-4 text-gray-800 select-none text-center">
-            What People Say About Me
-          </h2>
-        </div>
-
-        {/* Carousel */}
-        <div
-          className="relative w-full mt-16 top-[25vh] sm:mt-24"
-          style={{
-            perspective: "1200px",
-            height: "450px",
-          }}
-        >
-          {cards.map((card, index) => {
-            const pos = getPosition(index);
-            const posStyle = positions[pos];
-            const colorStyle = colorStyles[pos];
-            return (
-              <motion.div
-                key={card.id}
-                onClick={() => handleClick(index)}
-                className="absolute top-1/2 left-1/2 rounded-2xl select-none flex flex-col shadow-md group"
-                style={{
-                  width: "260px",
-                  height: "400px",
-                  x: posStyle.x,
-                  y: "-50%",
-                  rotateY: posStyle.rotateY,
-                  scale: posStyle.scale,
-                  filter: posStyle.filter,
-                  opacity: posStyle.opacity,
-                  zIndex: posStyle.zIndex,
-                  cursor: colorStyle.cursor,
-                  boxShadow: colorStyle.boxShadow,
-                  background: colorStyle.background,
-                  color: colorStyle.color,
-                  border: colorStyle.border,
-                  transformOrigin: "center center",
-                  position: "absolute",
-                  translate: "-50% -50%",
-                  userSelect: "none",
-                  transition: "box-shadow 0.3s ease",
-                }}
-                animate={{
-                  x: posStyle.x,
-                  rotateY: posStyle.rotateY,
-                  scale: posStyle.scale,
-                  filter: posStyle.filter,
-                  opacity: posStyle.opacity,
-                }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              >
-                {/* Top Section */}
-                <div className="flex items-center p-4 space-x-4 border-b border-gray-300">
-                  <img
-                    src={card.logo}
-                    alt={card.name}
-                    className="w-12 h-12 rounded-full object-cover border border-gray-400"
-                  />
-                  <h3 className="text-lg font-semibold truncate">{card.name}</h3>
-                </div>
-
-                {/* Review Text */}
-                <div className="flex-grow p-6 text-base sm:text-lg italic leading-relaxed overflow-auto">
-                  &ldquo;{card.review}&rdquo;
-                </div>
-
-                {/* Created At - Creative Style */}
-                <div className="px-5 pb-5 flex justify-end">
-                  <div
-                    className="flex items-center space-x-2 bg-green-100/50 text-green-700 font-medium text-sm rounded-full px-3 py-1 shadow-md
-                    backdrop-blur-sm
-                    group-hover:bg-green-200/70
-                    transition-colors duration-300 ease-in-out select-none"
-                    title={`Created on ${formatDate(card.createdAt)}`}
-                  >
-                    {/* Calendar Icon SVG */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="w-4 h-4"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <span>Created: {formatDate(card.createdAt)}</span>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+    <section className="min-h-screen bg-[#0C0C0C] flex flex-col items-center justify-center px-6 py-16 sm:py-24">
+      {/* Heading */}
+      <div className="text-center max-w-4xl mb-16">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-100 mb-3 tracking-wide select-none">
+          What People Say About Me
+        </h1>
+        <p className="text-gray-400 text-lg max-w-xl mx-auto select-none">
+          Real testimonials from clients and colleagues who experienced my work and services firsthand.
+        </p>
       </div>
-    </div>
+
+      {/* Carousel Container */}
+      <div className="relative w-full max-w-7xl h-[60vh] sm:h-[50vh] md:h-[60vh] flex items-center justify-center overflow-visible rounded-3xl">
+        {reviews.map((review, index) => {
+          const position = getPosition(index);
+          if (!position) return null;
+
+          const style = {
+            ...colorStyles[position],
+            position: "absolute",
+            width: "clamp(200px, 20vw, 280px)",
+            height: "clamp(280px, 26vw, 380px)",
+            padding: "26px",
+            borderRadius: "20px",
+            transition: "all 0.5s ease-in-out",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            userSelect: "none",
+          };
+
+          return (
+            <motion.div
+              key={review.id}
+              style={style}
+              animate={{
+                x: positions[position].x,
+                rotateY: positions[position].rotateY,
+                scale: positions[position].scale,
+                zIndex: positions[position].zIndex,
+                filter: positions[position].filter,
+                opacity: positions[position].opacity,
+              }}
+              transition={{ duration: 0.6 }}
+              className="select-none"
+              aria-label={`Review by ${review.name}`}
+            >
+              <img
+                src={review.logo}
+                alt={`${review.name}'s avatar`}
+                className="w-16 h-16 rounded-full mb-5 border-2 border-gray-300 shadow-md"
+                draggable={false}
+              />
+              <h3 className="text-2xl font-semibold mb-3 text-gray-100">{review.name}</h3>
+              <p className="text-md italic mb-6 px-4 text-gray-300">{`"${review.review}"`}</p>
+              <p className="text-xs text-gray-500 mt-auto">— {review.date}</p>
+            </motion.div>
+          );
+        })}
+
+        {/* Navigation Buttons */}
+        <button
+          onClick={handlePrev}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-50 p-3 bg-gray-800 rounded-full hover:bg-gray-700 focus:outline-none shadow-lg transition-colors"
+          aria-label="Previous Review"
+        >
+          <ArrowLeft size={28} color="#f9fafb" />
+        </button>
+        <button
+          onClick={handleNext}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-50 p-3 bg-gray-800 rounded-full hover:bg-gray-700 focus:outline-none shadow-lg transition-colors"
+          aria-label="Next Review"
+        >
+          <ArrowRight size={28} color="#f9fafb" />
+        </button>
+      </div>
+
+      {/* Footer note or call to action (optional) */}
+      <p className="mt-14 text-gray-500 max-w-xl text-center select-none">
+        These testimonials reflect my commitment and professionalism. Looking forward to adding you here soon!
+      </p>
+    </section>
   );
-}
+};
+
+export default CardCarousel;

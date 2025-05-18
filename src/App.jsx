@@ -36,7 +36,7 @@ function App() {
       smoother = ScrollSmoother.create({
         wrapper: containerRef.current,
         content: containerRef.current.children[0],
-        smooth: 4,
+        smooth: 0,
         effects: true,
         normalizeScroll: true,
       });
@@ -81,12 +81,12 @@ function App() {
         <Page2 />
         {/* coumputer wala part  */}
         <Page3 />
+        <Page5 />
         {/* balling effect game */}
         <Page8 />
           {/* new scroll marquee part */}
         <Page4 />
         {/* my tools that i use  */}
-        <Page5 />
         {/* last animated part  */}
     
         <Page7 />

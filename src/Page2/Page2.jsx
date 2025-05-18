@@ -42,7 +42,7 @@ function Page2() {
             initial={{ x: 0 }}
             animate={{ x: "-100%" }} // Animate horizontally to the left
             transition={{
-              duration: 7,
+              duration: 20,
               ease: "linear",
               repeat: Infinity, // Infinite loop for scrolling
             }}
@@ -54,7 +54,7 @@ function Page2() {
             initial={{ x: 0 }}
             animate={{ x: "-100%" }}
             transition={{
-              duration: 7,
+              duration: 20,
               ease: "linear",
               repeat: Infinity,
             }}
@@ -66,7 +66,7 @@ function Page2() {
             initial={{ x: 0 }}
             animate={{ x: "-100%" }}
             transition={{
-              duration: 7,
+              duration: 20,
               ease: "linear",
               repeat: Infinity,
             }}

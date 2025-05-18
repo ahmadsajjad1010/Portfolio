@@ -33,7 +33,7 @@ const ScrollMarquee = () => {
 
   return (
     <div
-      className="h-[40vh] md:h-[80vh] bg-[#131313] text-white overflow-hidden flex flex-col justify-center items-center gap-8 px-4"
+      className="h-[40vh] md:h-[80vh] bg-[#131313] border-gray-500 border-t-[1px] text-white overflow-hidden flex flex-col justify-center items-center gap-8 px-4"
     >
       {/* Transparent stroked text */}
       <div
