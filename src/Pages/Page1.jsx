@@ -64,16 +64,17 @@ function Page1() {
       <div
         className="w-full shadow-2xl main relative h-full bg-no-repeat rounded-3xl bg-cover bg-center"
         style={{
-          backgroundImage: `url('./assets/mainsidepose.jpg')`,
+          backgroundImage: `url('./assets/mainsidepose.png')`,
         }}
       >
         <div className="outer relative w-2/3 px-[4.5rem] h-full flex flex-col justify-around">
           <div className="">
             <div>
               <div
-                className="w-16 h-16 bg-center bg-cover bg-no-repeat"
+                className="w-16 h-16 bg-center bg-contain bg-no-repeat"
                 style={{
-                  backgroundImage: `url('./assets/logo.webp')`,
+                  backgroundImage: `url('./assets/logo.png')`,
+
                 }}
               ></div>
             </div>

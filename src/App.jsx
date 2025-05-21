@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import gsap from "gsap";
-// import { ScrollTrigger } from "gsap/ScrollTrigger"; // Removed because not used anymore
-// import { ScrollSmoother } from "gsap/ScrollSmoother"; // Removed to fix mobile lag
 
+// Page imports
 import Page1 from "./Pages/Page1";
 import "./index.css";
 import Hire from "./Pages/Hire";
@@ -13,10 +12,8 @@ import Page5 from "./Page5/Page5";
 import Page7 from "./Page7/Page7";
 import Page8 from "./Page8/Page8";
 
-// gsap.registerPlugin(ScrollTrigger, ScrollSmoother); // Removed ScrollSmoother for better performance
-
 function App() {
-  // Cursor follows mouse with smooth GSAP animation
+  // Cursor follows mouse
   function cursor(e) {
     const element = document.querySelector("#dot");
     gsap.to(element, {
@@ -35,7 +32,7 @@ function App() {
         style={{
           height: "100%",
           overflowX: "hidden",
-          position: "relative",   // Ensure positioning context for children
+          position: "relative",
         }}
       >
         {/* Custom cursor dot */}
@@ -45,22 +42,14 @@ function App() {
           className="w-[10px] h-[10px] rounded-full bg-[#D0F034] mix-blend-plus-lighter origin-center z-[9999] absolute pointer-events-none"
         ></div>
 
-        {/* Your pages/components */}
-        {/* Your website sections/components */}
+        {/* Website sections */}
         <Hire />
-        {/* main upper part  */}
         <Page1 />
-        {/* text moving and string wala part  */}
         <Page2 />
-        {/* coumputer wala part  */}
         <Page3 />
         <Page5 />
-        {/* balling effect game */}
         <Page8 />
-        {/* new scroll marquee part */}
         <Page4 />
-        {/* my tools that i use  */}
-        {/* last animated part  */}
         <Page7 />
       </div>
     </>
